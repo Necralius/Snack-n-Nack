@@ -18,7 +18,12 @@ namespace NekraliusDevelopmentStudio
         {
             GridGenerator gridGenerator = (GridGenerator)target;
 
-            if (GUILayout.Button("Regenerate Grid")) gridGenerator.GenerateGrid();
+            if (GUILayout.Button("Regenerate Grid"))
+            {
+                if (Application.isPlaying) gridGenerator.GenerateGridInGameAction();
+                else gridGenerator.GenerateGridInEditorAction();
+            }
+            if (GUILayout.Button("Update and Regenerate")) gridGenerator.GenerateGridInGameAction(gridGenerator.newMatrixFactor);
 
             DrawDefaultInspector();
         }

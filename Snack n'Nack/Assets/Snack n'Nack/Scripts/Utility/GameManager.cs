@@ -4,25 +4,81 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+namespace NekraliusDevelopmentStudio
 {
-    //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-    //CompleteCodeName - (Code Version)
-    //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
-    //This code represents (Code functionality ou code meaning)
+    public class GameManager : MonoBehaviour
+    {
+        //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
+        //GameManager - (Code Version)
+        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //This code represents (Code functionality ou code meaning)
 
-    #region - Singleton Pattern -
-    public static GameManager Instance;
-    private void Awake() => Instance = this;
-    #endregion
+        #region - Singleton Pattern -
+        public static GameManager Instance;
+        private void Awake() => Instance = this;
+        #endregion
 
-    #region - UI Update -
-    [Header("UI Items")]
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI timeText;
-    #endregion
+        private GridGenerator gridGenerator => GridGenerator.Instance;
 
-    public void LoadSceneAsync(int SceneIndex) => SceneManager.LoadSceneAsync(SceneIndex);//This method loads an scene using an scene index as argument
-    public void LoadSceneAsync(string SceneName) => SceneManager.LoadSceneAsync(SceneName);//This method loads an scene using the scene name as argument
-    public void ReloadCurrentScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//This method reload the current scene
+        #region - UI Update -
+        [Header("UI Items")]
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI timerText;
+        #endregion
+
+        #region - Counter System -
+        [Header("Counter System")]
+        public float gameTime;
+        public float maxGameTime = 20f;
+        public float timeToStartGame = 3f;
+        public bool gameStarted = false;
+        public bool gameFinished = false;
+        #endregion
+
+        #region - Scene Managment -
+        public void LoadSceneAsync(int SceneIndex) => SceneManager.LoadSceneAsync(SceneIndex);//This method loads an scene using an scene index as argument
+        public void LoadSceneAsync(string SceneName) => SceneManager.LoadSceneAsync(SceneName);//This method loads an scene using the scene name as argument
+        public void ReloadCurrentScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//This method reload the current scene
+        #endregion
+
+        private void Update()
+        {
+            CounterManegment();
+        }
+        private void CounterManegment()
+        {
+            if (!GridGenerator.Instance.generationFinished)
+            {
+                gameStarted = false;
+                gameFinished = false;
+                gameTime = 0;
+            }
+
+            if (!gameStarted && GridGenerator.Instance.generationFinished)
+            {
+                gridGenerator.ShowAllCells();
+
+                gameTime += Time.deltaTime;
+                if (gameTime >= timeToStartGame)
+                {
+                    gridGenerator.HideAllCells();
+
+                    gameStarted = true;
+                    gameTime = 0;
+                }
+                timerText.text = string.Format("{0:00.00}/{1:00.00}", gameTime, timeToStartGame);
+            }
+            else if (gameStarted)
+            {
+                if (gameTime < maxGameTime) gameTime += Time.deltaTime;
+                else if (gameTime >= maxGameTime)
+                {
+                    gameTime = maxGameTime;
+                    gameFinished = true;
+                }
+                timerText.text = string.Format("{0:00.00}/{1:00.00}", gameTime, maxGameTime);
+            }
+            
+        }
+    }
 }
