@@ -15,11 +15,19 @@ namespace NekraliusDevelopmentStudio
         [SerializeField] private int posX;
         [SerializeField] private int posZ;
 
-        public bool isOccupied = false;
+        public bool isSelected = false;
 
         [Header("Animation Settings")]
         public float rotationSpeed;
         public bool slotShowed = false;
+
+        public int guessID;
+
+        public Outline outlineEffector;
+        private void Start()
+        {
+            outlineEffector = GetComponent<Outline>();
+        }
 
         public void SetPosition(int posX, int posZ)
         {

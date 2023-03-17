@@ -380,6 +380,7 @@
 "Assets/Snack n'Nack/External Assets/QuickOutline/Scripts/Outline.cs"
 "Assets/Snack n'Nack/Scripts/GameLogic/GridGeneration/GridCell.cs"
 "Assets/Snack n'Nack/Scripts/GameLogic/GridGeneration/GridGenerator.cs"
+"Assets/Snack n'Nack/Scripts/InputAsset/InputController.cs"
 "Assets/Snack n'Nack/Scripts/Utility/GameManager.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0

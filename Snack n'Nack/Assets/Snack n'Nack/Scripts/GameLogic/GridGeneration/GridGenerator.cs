@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using System.Security.Cryptography;
 
 namespace NekraliusDevelopmentStudio
 {
@@ -17,22 +20,34 @@ namespace NekraliusDevelopmentStudio
         private void Awake() => Instance = this;
         #endregion
 
+        #region - Grid Data -
+        [Header("Grid Data")]
         [SerializeField, Range(2, 10)] private int height = 10;
         [SerializeField, Range(2,10)] private int width = 10;
         [SerializeField] private float gridSpaceSize = 5f;
         [SerializeField] private float timeBetwenCellSpawn = 0.5f;
-
         [SerializeField] private GameObject gridCellPrefab;
-        public GameObject[,] gameGrid;
+        private GameObject[,] gameGrid;
         public List<GameObject> gameGridContent;
-
-        Vector3 centerCoordinate;
-        public GameObject centerTarget;
-        public float cameraTravelSpeed = 3f;
+        #endregion
 
         public bool generationFinished = false;
 
+        #region - Camera Adjustment Data-
+        Vector3 centerCoordinate;
+        [Header("Camera Adjustment Data")]
+        public GameObject centerTarget;
+        public float cameraTravelSpeed = 3f;
         public int newMatrixFactor = 3;
+        #endregion
+
+        #region - Diferent Cubs Spawn -
+        public GameObject[] cellTypesPrefabs;
+        public GameObject selectedObject;
+        public int spawnedTimes = 2;
+
+        public List<GameObject> pairs;
+        #endregion
 
         #region - BuildIn Methods -
         private void Start()
@@ -80,11 +95,27 @@ namespace NekraliusDevelopmentStudio
             gameGrid = new GameObject[height, width];
             gameGridContent = new List<GameObject>(height * width);
 
+            GeneratePairs();
+
             for (int z = 0; z < height; z++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    GameObject instatiatedObj = Instantiate(gridCellPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
+                    if (GameManager.Instance.casualMode)
+                    {
+                        if (spawnedTimes == 2)
+                        {
+                            selectedObject = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
+                            spawnedTimes = 1;
+                        }
+                        else if (spawnedTimes < 2) spawnedTimes++;
+                    }
+                    else if (GameManager.Instance.infinityMode)
+                    {
+                        Debug.Log("Not implemented yet!");
+                    }
+
+                    GameObject instatiatedObj = Instantiate(selectedObject, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
 
                     gameGridContent.Add(instatiatedObj);
 
@@ -98,6 +129,21 @@ namespace NekraliusDevelopmentStudio
                 }
             }
             generationFinished = true;
+        }
+        public void GeneratePairs()
+        {
+            int looper = height * height;
+            int index = 0;
+
+            for (int i = 0; i < looper; i++)
+            {
+                if (index == looper / 2) index = 0;
+                pairs.Add(cellTypesPrefabs[index]);
+                index++;
+            }
+            System.Random random = new System.Random();
+            pairs = pairs.OrderBy(e => random.Next()).ToList();
+            pairs = pairs.OrderBy(e => random.Next()).ToList();
         }
         public void RegenerateGridWithNewFactor(int factor) => StartCoroutine(GenerateGridInGame(factor));
         public void GenerateGridInGameAction(int matrixFactor) => StartCoroutine(GenerateGridInGame(matrixFactor));
@@ -129,7 +175,9 @@ namespace NekraliusDevelopmentStudio
             {
                 for (int x = 0; x < width; x++)
                 {
-                    GameObject instatiatedObj = Instantiate(gridCellPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
+                    GameObject selectedPrefab = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
+
+                    GameObject instatiatedObj = Instantiate(selectedPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
 
                     gameGridContent.Add(instatiatedObj);
 
@@ -151,7 +199,6 @@ namespace NekraliusDevelopmentStudio
         {
             float Y_Pos = 2.3f;
             Vector3 newCenterCoordinate = Vector3.zero;
-
 
             if ((height % 2) > 0)//Odd number verification
             {
@@ -199,7 +246,9 @@ namespace NekraliusDevelopmentStudio
             {
                 for (int x = 0; x < width; x++)
                 {
-                    GameObject instatiatedObj = Instantiate(gridCellPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y,transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
+                    GameObject selectedPrefab = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
+
+                    GameObject instatiatedObj = Instantiate(selectedPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y,transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
                     gameGridContent.Add(instatiatedObj);
 
                     gameGrid[x, z] = instatiatedObj;
