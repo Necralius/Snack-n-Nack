@@ -9,33 +9,43 @@ namespace NekraliusDevelopmentStudio
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
         //GridCell - (Code Version)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality or code meaning)
 
+        #region - Position Data -
         [SerializeField] private int posX;
         [SerializeField] private int posZ;
+        #endregion
 
+        #region - Visual Data -
         public bool isSelected = false;
 
         [Header("Animation Settings")]
         public float rotationSpeed;
         public bool slotShowed = false;
 
+        [HideInInspector] public Outline outlineEffector;
+        #endregion
+
+        #region - Indentificator Data -
         public int guessID;
+        #endregion
 
-        public Outline outlineEffector;
-        private void Start()
-        {
-            outlineEffector = GetComponent<Outline>();
-        }
+        //----------- Methods -----------//
 
+        #region - Build In Methods -
+        private void Start() => outlineEffector = GetComponent<Outline>();
+        #endregion
+
+        #region - Position Management -
         public void SetPosition(int posX, int posZ)
         {
             this.posX = posX;
             this.posZ = posZ;
         }
-        public Vector2Int GetPosition() => new Vector2Int(posX, posZ);
+        #endregion
 
+        #region - Object Animation Managment -
         public void ShowObject()
         {
             transform.DORotate(new Vector3(180, 0, 0), rotationSpeed * 0.5f).SetEase(Ease.Linear);
@@ -46,5 +56,6 @@ namespace NekraliusDevelopmentStudio
             transform.DORotate(new Vector3(0, 0, 0), rotationSpeed * 0.5f).SetEase(Ease.Linear);
             slotShowed = false;
         }
+        #endregion
     }
 }

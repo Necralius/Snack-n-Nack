@@ -10,8 +10,8 @@ namespace NekraliusDevelopmentStudio
     public class GridGeneratorCE : Editor
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //GridGeneratorCE - (Code Version)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //GridGeneratorCE - (0.1)
+        //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality ou code meaning)
 
         public override void OnInspectorGUI()
@@ -21,7 +21,6 @@ namespace NekraliusDevelopmentStudio
             if (GUILayout.Button("Regenerate Grid"))
             {
                 if (Application.isPlaying) gridGenerator.GenerateGridInGameAction();
-                else gridGenerator.GenerateGridInEditorAction();
             }
             if (GUILayout.Button("Update and Regenerate")) gridGenerator.GenerateGridInGameAction(gridGenerator.newMatrixFactor);
 

@@ -9,8 +9,8 @@ namespace NekraliusDevelopmentStudio
     public class InputController : MonoBehaviour
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //InputController - (Code Version)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //InputController - (0.1)
+        //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality or code meaning)
 
         #region - Singleton Pattern -
@@ -18,17 +18,21 @@ namespace NekraliusDevelopmentStudio
         void Awake() => Instance = this;
         #endregion
 
+        #region - Main Data Declaration -
         [Header("Input Detection")]
         public LayerMask objectMask;
         public Camera mainCam => Camera.main;
 
-        //[Header("Guessing System")]
         public enum GuessType { First, Second};
+        [Header("Guessing System")]
         public bool firstGuessTaked = false;
         public bool secondGuessTaked = false;
 
         public Guess firstGuess;
         public Guess secondGuess;
+        #endregion
+
+        //----------- Methods -----------//
 
         #region - BuildIn Methods -
         private void Update()
@@ -58,6 +62,8 @@ namespace NekraliusDevelopmentStudio
             {
                 firstGuessTaked = true;
                 firstGuess = new Guess(gridCellitem.guessID, gridCellitem);
+                firstGuess.gridCell.ShowObject();
+
                 gridCellitem.outlineEffector.enabled = true;
                 gridCellitem.isSelected = true;
             }
@@ -67,25 +73,34 @@ namespace NekraliusDevelopmentStudio
                 {
                     secondGuessTaked = true;
                     secondGuess = new Guess(gridCellitem.guessID, gridCellitem);
+                    secondGuess.gridCell.ShowObject();
+
                     gridCellitem.outlineEffector.enabled = true;
                     gridCellitem.isSelected = true;
+
                     StartCoroutine(CheckGuesses());
                 }
             } 
         }
+
+        #region - Guessing Check -
         private IEnumerator CheckGuesses()
         {
             if (firstGuess.CheckGuesses(secondGuess))
             {
                 GameManager.Instance.CalculateScore();
-                Destroy(firstGuess.gridCell.gameObject, 0.2f);
-                Destroy(secondGuess.gridCell.gameObject, 0.2f);
+
+                Destroy(firstGuess.gridCell.gameObject, 1f);
+                Destroy(secondGuess.gridCell.gameObject, 1f);
             }
             else
             {
                 yield return new WaitForSeconds(1f);
                 firstGuess.gridCell.outlineEffector.enabled = false;
                 secondGuess.gridCell.outlineEffector.enabled = false;
+
+                firstGuess.gridCell.HideObject();
+                secondGuess.gridCell.HideObject();
             }
 
             firstGuessTaked = false;
@@ -94,6 +109,8 @@ namespace NekraliusDevelopmentStudio
             firstGuess = null;
             secondGuess = null;
         }
+        #endregion
+
         #endregion
     }
 }

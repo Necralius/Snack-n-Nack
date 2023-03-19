@@ -381,7 +381,15 @@
 "Assets/Snack n'Nack/Scripts/GameLogic/GridGeneration/GridCell.cs"
 "Assets/Snack n'Nack/Scripts/GameLogic/GridGeneration/GridGenerator.cs"
 "Assets/Snack n'Nack/Scripts/InputAsset/InputController.cs"
-"Assets/Snack n'Nack/Scripts/Utility/GameManager.cs"
+"Assets/Snack n'Nack/Scripts/LevelManegement/LevelModel.cs"
+"Assets/Snack n'Nack/Scripts/LevelManegement/LevelView.cs"
+"Assets/Snack n'Nack/Scripts/Managers/AudioManager.cs"
+"Assets/Snack n'Nack/Scripts/Managers/GameManager.cs"
+"Assets/Snack n'Nack/Scripts/Managers/LevelManager.cs"
+"Assets/Snack n'Nack/Scripts/Managers/SceneManagement.cs"
+"Assets/Snack n'Nack/Scripts/Managers/ScreenManagerSystem/Menu.cs"
+"Assets/Snack n'Nack/Scripts/Managers/ScreenManagerSystem/MenuManager.cs"
+"Assets/Snack n'Nack/Scripts/Utility/SerializableDictionary.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0
 

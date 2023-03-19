@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 
 namespace NekraliusDevelopmentStudio
 {
@@ -12,7 +13,7 @@ namespace NekraliusDevelopmentStudio
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
         //GridGenerator - (0.1)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality ou code meaning)
 
         #region - Singleton Pattern -
@@ -31,7 +32,9 @@ namespace NekraliusDevelopmentStudio
         public List<GameObject> gameGridContent;
         #endregion
 
+        #region - Generation State -
         public bool generationFinished = false;
+        #endregion
 
         #region - Camera Adjustment Data-
         Vector3 centerCoordinate;
@@ -42,12 +45,16 @@ namespace NekraliusDevelopmentStudio
         #endregion
 
         #region - Diferent Cubs Spawn -
+        [Header("Cell Puzzles Types")]
         public GameObject[] cellTypesPrefabs;
         public GameObject selectedObject;
-        public int spawnedTimes = 2;
 
-        public List<GameObject> pairs;
+        private List<GameObject> pairs;
+        [Header("All Puzzles and Positions")]
+        public SerializableDictionary<Vector2, GameObject> gridDictionary;
         #endregion
+
+        //----------- Methods -----------//
 
         #region - BuildIn Methods -
         private void Start()
@@ -59,16 +66,19 @@ namespace NekraliusDevelopmentStudio
         {
             centerTarget.transform.localPosition = Vector3.Lerp(centerTarget.transform.localPosition, CalculateGridCenter(), cameraTravelSpeed * Time.deltaTime);
         }
+        private void FixedUpdate() => ManageCellContent();
         #endregion
 
-        public void ShowAllCells()
+        #region - Cell Animation Management -
+        public void ShowAllCells()//This method get all the game cells content and call his show animation
         {
             foreach(GameObject obj in gameGridContent) obj.GetComponent<GridCell>().ShowObject();
         }
-        public void HideAllCells()
+        public void HideAllCells()//this method get all the game cells content and call his hide animation
         {
             foreach (GameObject obj in gameGridContent) obj.GetComponent<GridCell>().HideObject();
         }
+        #endregion
 
         #region - Grid Generation -
 
@@ -76,8 +86,11 @@ namespace NekraliusDevelopmentStudio
         public void GenerateGridInGameAction() => StartCoroutine(GenerateGridInGame());
         public IEnumerator GenerateGridInGame()
         {
+            //This method generates an bidimentional array to produce the game grid
+
             generationFinished = false;
 
+            //The below statements verified some data to make sure that the system cannot break within the game execution
             if (height != width)
             {
                 Debug.LogWarning("The height and width numbers must be equals!");
@@ -90,62 +103,58 @@ namespace NekraliusDevelopmentStudio
                 yield return null;
             }
 
+            //The below statement verifies if exists an previous grid data, and if there is, the statement destroy all the previus grid data
             if (!(gameGridContent.Equals(null))) DestroyPreviusGrid();
 
             gameGrid = new GameObject[height, width];
             gameGridContent = new List<GameObject>(height * width);
 
-            GeneratePairs();
+            pairs = GeneratePairs();
+            int index = 0;
 
             for (int z = 0; z < height; z++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (GameManager.Instance.casualMode)
-                    {
-                        if (spawnedTimes == 2)
-                        {
-                            selectedObject = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
-                            spawnedTimes = 1;
-                        }
-                        else if (spawnedTimes < 2) spawnedTimes++;
-                    }
-                    else if (GameManager.Instance.infinityMode)
-                    {
-                        Debug.Log("Not implemented yet!");
-                    }
-
+                    selectedObject = pairs[index];
                     GameObject instatiatedObj = Instantiate(selectedObject, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
+                    
+                    gridDictionary.Add(new Vector2(x, z), instatiatedObj);
+                    gridDictionary[new Vector2(x,z)].GetComponent<GridCell>().SetPosition(x, z);
+                    gridDictionary[new Vector2(x,z)].GetComponent<GridCell>().gameObject.name = string.Format("Grid Item [{0},{1}]", x, z);
 
                     gameGridContent.Add(instatiatedObj);
 
-                    gameGrid[x, z] = instatiatedObj;
-                    gameGrid[x, z].GetComponent<GridCell>().SetPosition(x, z);
-                    gameGrid[x, z].gameObject.name = string.Format("Grid Item [{0},{1}]", x, z);
-
                     instatiatedObj = null;
+                    index++;
 
                     yield return new WaitForSeconds(timeBetwenCellSpawn);
                 }
             }
             generationFinished = true;
         }
-        public void GeneratePairs()
+        public List<GameObject> GeneratePairs()
         {
+            /* This method get all the puzzles types and generates pairs possibilities based on the grid puzzle quantity need,
+            later the method shufle the list two times and returns itself. */
+            List<GameObject> generatedPairs = new List<GameObject>();
+
             int looper = height * height;
             int index = 0;
 
             for (int i = 0; i < looper; i++)
             {
                 if (index == looper / 2) index = 0;
-                pairs.Add(cellTypesPrefabs[index]);
+                generatedPairs.Add(cellTypesPrefabs[index]);
                 index++;
             }
-            System.Random random = new System.Random();
-            pairs = pairs.OrderBy(e => random.Next()).ToList();
-            pairs = pairs.OrderBy(e => random.Next()).ToList();
+
+            System.Random random = new System.Random();//This statement makes the method use only the System Random library for this especific purpouse.
+
+            generatedPairs = generatedPairs.OrderBy(e => random.Next()).ToList();
+            generatedPairs = generatedPairs.OrderBy(e => random.Next()).ToList();
+            return generatedPairs;
         }
-        public void RegenerateGridWithNewFactor(int factor) => StartCoroutine(GenerateGridInGame(factor));
         public void GenerateGridInGameAction(int matrixFactor) => StartCoroutine(GenerateGridInGame(matrixFactor));
         public IEnumerator GenerateGridInGame(int newMatrixFactor)
         {
@@ -171,27 +180,35 @@ namespace NekraliusDevelopmentStudio
             gameGrid = new GameObject[height, width];
             gameGridContent = new List<GameObject>(height * width);
 
+            GeneratePairs();
+            int index = 0;
+
             for (int z = 0; z < height; z++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    GameObject selectedPrefab = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
+                    selectedObject = pairs[index];
+                    GameObject instatiatedObj = Instantiate(selectedObject, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
 
-                    GameObject instatiatedObj = Instantiate(selectedPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y, transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
+                    gridDictionary.Add(new Vector2(x, z), instatiatedObj);
+
+                    gridDictionary[new Vector2(x, z)].GetComponent<GridCell>().SetPosition(x, z);
+                    gridDictionary[new Vector2(x, z)].GetComponent<GridCell>().gameObject.name = string.Format("Grid Item [{0},{1}]", x, z);
 
                     gameGridContent.Add(instatiatedObj);
 
-                    gameGrid[x, z] = instatiatedObj;
-                    gameGrid[x, z].GetComponent<GridCell>().SetPosition(x, z);
-                    gameGrid[x, z].gameObject.name = string.Format("Grid Item [{0},{1}]", x, z);
-
                     instatiatedObj = null;
+                    index++;
 
                     yield return new WaitForSeconds(timeBetwenCellSpawn);
                 }
             }
             generationFinished = true;
         }
+        #endregion
+
+        #region - Game Content Cells Manegment -
+        public void ManageCellContent() => gameGridContent.RemoveAll(s => s == null);//This method remove all objects that is on the game content list an is equals to null
         #endregion
 
         #region - Grid Center Calculation -
@@ -219,45 +236,6 @@ namespace NekraliusDevelopmentStudio
                 newCenterCoordinate = new Vector3(pairIndex * gridSpaceSize, Y_Pos, pairIndex * gridSpaceSize);
             }
             return newCenterCoordinate;
-        }
-        #endregion
-
-        #region - Grid Generator In Editor -
-        public void GenerateGridInEditorAction()
-        {
-            if (height != width)
-            {
-                Debug.LogWarning("The height and width numbers must be equals!");
-                return;
-            }
-
-            if (gridCellPrefab == null)
-            {
-                Debug.LogWarning("Please assing a valid grid cell prefab!");
-                return;
-            }
-
-            if (!(gameGridContent.Equals(null))) DestroyPreviusGrid();
-
-            gameGrid = new GameObject[height, width];
-            gameGridContent = new List<GameObject>(height * width);
-
-            for (int z = 0; z < height; z++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    GameObject selectedPrefab = cellTypesPrefabs[Random.Range(0, cellTypesPrefabs.Length)];
-
-                    GameObject instatiatedObj = Instantiate(selectedPrefab, new Vector3(transform.position.x + x * gridSpaceSize, transform.position.y,transform.position.z + z * gridSpaceSize), Quaternion.identity, transform);
-                    gameGridContent.Add(instatiatedObj);
-
-                    gameGrid[x, z] = instatiatedObj;
-                    gameGrid[x, z].GetComponent<GridCell>().SetPosition(x, z);
-                    gameGrid[x, z].gameObject.name = string.Format("Grid Item [{0},{1}]", x, z);
-
-                    instatiatedObj = null;
-                }
-            }
         }
         #endregion
 

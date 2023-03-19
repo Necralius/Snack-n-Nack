@@ -9,8 +9,8 @@ namespace NekraliusDevelopmentStudio
     public class GridCellCE : Editor
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //GridCellCE - (Code Version)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //GridCellCE - (0.1)
+        //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality or code meaning)
 
         public override void OnInspectorGUI()
