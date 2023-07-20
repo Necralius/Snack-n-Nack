@@ -13,8 +13,9 @@ namespace NekraliusDevelopmentStudio
         //This code represents (Code functionality or code meaning)
 
         #region - Position Data -
-        [SerializeField] private int posX;
-        [SerializeField] private int posZ;
+        [SerializeField] public int posX;
+        [SerializeField] public int posZ;
+        public Vector3 literalPosition;
         #endregion
 
         #region - Visual Data -
@@ -29,19 +30,27 @@ namespace NekraliusDevelopmentStudio
 
         #region - Indentificator Data -
         public int guessID;
+
+        public bool isSpecial;
+        public int specialID;
         #endregion
 
         //----------- Methods -----------//
 
         #region - Build In Methods -
-        private void Start() => outlineEffector = GetComponent<Outline>();
+        private void Start() => outlineEffector = GetComponentInChildren<Outline>();
         #endregion
 
-        #region - Position Management -
+        #region - Cell Management -
         public void SetPosition(int posX, int posZ)
         {
             this.posX = posX;
             this.posZ = posZ;
+        }
+        public void ConstructCell(GridCell cell)
+        {
+            this.SetPosition(cell.posX, cell.posZ);
+            this.literalPosition = cell.literalPosition;
         }
         #endregion
 

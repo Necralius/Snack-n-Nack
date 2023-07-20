@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -19,7 +21,17 @@ namespace NekraliusDevelopmentStudio
         private void Awake() => Instance = this;
         #endregion
 
+        public GameObject pauseMenu;
+        public bool isPaused;
         private GridGenerator gridGenerator => GridGenerator.Instance;
+
+        #region - Combo System -
+        public int comboQuantity = 0;
+        public TextMeshProUGUI comboText;
+        private Animator comboAnimator => comboText.GetComponent<Animator>();
+        [SerializeField] private float comboTime = 3;
+        private float currentComboTimer = 0;
+        #endregion
 
         #region - UI Update -
         [Header("UI Items")]
@@ -36,47 +48,51 @@ namespace NekraliusDevelopmentStudio
         [Header("Game State")]
         public bool gameStarted = false;
         public bool gameFinished = false;
-        #endregion
-
-        #region - Game Mode Manegment -
-        [Header("Game Mode")]
-        public GameType gameType = GameType.CasualMode;
-        public enum GameType {CasualMode, InfinityMode};
+        private bool savedGame = false;
         #endregion
 
         #region - Score Value -
         [Header("Score")]
-        public int scoreValue;
+        public int currentScoreValue;
+        public int targetScore;
         #endregion
 
         #region - Game Finish Data -
         [Header("Game Finish System")]
         public GameObject finishScreen;
+        public GameObject objectsToHide;
         public TextMeshProUGUI finalTime;
         public TextMeshProUGUI finalScore;
+        #endregion
+
+        #region - Infinity Mode -
+        public int wrongGuesses = 0;
+        public int maxWrongGuesses = 3;
 
         #endregion
 
         //----------- Methods -----------//
 
         #region - Build In Methods -
+        
         private void Update()
         {
             CounterManegment();
+            ComboCounter();
+            if (gameFinished) FinishGame();
 
-            if (gameTime >= maxGameTime || gridGenerator.gameGridContent.Count <= 0) FinishGame();
+            currentScoreValue = Mathf.RoundToInt(Mathf.Lerp(currentScoreValue, targetScore, 10 * Time.deltaTime));
+            scoreText.text = currentScoreValue.ToString();
         }
-        private void OnEnable()
-        {
-            finishScreen.SetActive(false);
-        }
+        private void OnEnable() { finishScreen.SetActive(false); objectsToHide.SetActive(true); }
+        private void Start() => savedGame = false;
         #endregion
 
         #region - Score Calculation -
-        public void CalculateScore()
+        public void CalculateScore(int value)
         {
-            scoreValue += 200;
-            scoreText.text = scoreValue.ToString();
+            targetScore += value;
+            gridGenerator.RandomObjectPossibilityAddBehavior();
         }
         #endregion
 
@@ -86,15 +102,15 @@ namespace NekraliusDevelopmentStudio
             if (gameFinished) return;
             else if (!gameFinished) finishScreen.SetActive(false);
 
-            if (gameType.Equals(GameType.CasualMode))
+            if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode))
             {
-                if (!GridGenerator.Instance.generationFinished)
+                if (!gridGenerator.generationFinished)
                 {
                     gameStarted = false;
                     gameFinished = false;
                     gameTime = 0;
                 }
-                if (!gameStarted && GridGenerator.Instance.generationFinished)
+                if (!gameStarted && gridGenerator.generationFinished)
                 {
                     gridGenerator.ShowAllCells();
 
@@ -118,10 +134,27 @@ namespace NekraliusDevelopmentStudio
                     }
                     timerText.text = string.Format("{0:00.00}/{1:00.00}", gameTime, maxGameTime);
                 }
+                if (gridGenerator.gameGridContent.Count <= 0)
+                {
+                    Debug.Log("Game finished!");
+                    gameFinished = true;
+                }
             }
-            else if (gameType.Equals(GameType.InfinityMode))
+            else if (PlayerManager.Instance.gameType.Equals(GameType.InfinityMode))
             {
-
+                if (!gridGenerator.generationFinished)
+                {
+                    gameStarted = false;
+                    gameFinished = false;
+                    gameTime = 0;
+                }
+                else if (gridGenerator.generationFinished) gameStarted = true;
+                if (gameStarted)
+                {
+                    if (!gameFinished) gameTime += Time.deltaTime;
+                    if (wrongGuesses >= maxWrongGuesses) gameFinished = true;
+                    timerText.text = string.Format("{0:00.00}", gameTime);
+                }
             }
         }
         #endregion
@@ -130,12 +163,78 @@ namespace NekraliusDevelopmentStudio
         private void FinishGame()
         {
             gameFinished = true;
+            Debug.Log("Game Finished!");
             
-            finalTime.text = string.Format("Your Time: {0:00.00}", gameTime);
-            finalScore.text = string.Format("Your Score: {0}", scoreValue);
+            finalTime.text = string.Format("{0:00.00}", gameTime);
+            finalScore.text = string.Format("{0}", currentScoreValue);
+
+            if (!savedGame)
+            {
+                if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode))
+                {
+                    PlayerManager.Instance.UnlockNextLevel();
+                    PlayerManager.Instance.currentLevel.levelPlayed = true;
+                }
+                PlayerManager.Instance.playerData.AddScore(currentScoreValue);
+                PlayerManager.Instance.playerData.SaveScore();
+                savedGame = true;
+            }
 
             finishScreen.SetActive(true);
+            objectsToHide.SetActive(false);
         }
         #endregion
+
+        #region - Pause Game -
+        public void SettingInteraction()
+        {
+            pauseMenu.SetActive(!pauseMenu.activeInHierarchy);
+            isPaused = pauseMenu.activeInHierarchy;
+
+            Time.timeScale = isPaused ? 0f : 1f;
+        }
+        #endregion
+
+        #region - Retry Level Action -
+        public void RetryLevelAction() => ConfirmationDialogue.Instance.SetUpAction("Confirm Retry", "Really want to repeat the level?", ReloadLevel);
+        #endregion
+
+        #region - Return To Menu Action -
+        public void ReturnToMenu() => ConfirmationDialogue.Instance.SetUpAction("Confirm Return", "Really want to return to main menu?", ReturnToMenu);
+        #endregion
+
+        #region - Combo System -
+        public void AddCombo()
+        {
+            comboQuantity++;
+            currentComboTimer = comboTime;
+            comboAnimator.SetTrigger("AddCombo");
+            comboText.text = $"Combo {comboQuantity}X";
+        }
+        public void ResetCombo()
+        {
+            comboQuantity = 0;
+            comboText.text = $"Combo {comboQuantity}X";
+            gameObject.SetActive(false);
+        }
+        private void ComboCounter()
+        {
+            if (currentComboTimer <= 0) ResetCombo();
+            else currentComboTimer -= Time.deltaTime;
+        }
+        #endregion
+
+
+        string ReloadLevel(bool confirmed)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            return "Not Implemented";
+        }
+
+        string ReturnToMenu(bool confirmed)
+        {
+            SceneManager.LoadScene(0);
+            return "Not Implemented";
+        }
     }
 }

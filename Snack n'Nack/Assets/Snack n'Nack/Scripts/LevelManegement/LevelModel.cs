@@ -8,23 +8,22 @@ namespace NekraliusDevelopmentStudio
     public class LevelModel : ScriptableObject
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //CompleteCodeName - (Code Version)
-        //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
-        //This code represents (Code functionality or code meaning)
+        //LevelModel - (0.3)
+        //State: Functional - (Needs Refactoring, Needs Coments, Needs Improvement)
+        //This code represents an scriptable level model,
+        //OBS: The scriptable object has been choosed because of his persistent data aspect. 
 
+        [Header("Level Aspects")]
         public bool levelUnlocked = true;
+        public bool levelPlayed = false;
+
+        public bool levelIsInfinity = false;
 
         #region - Data Declaration -
         [Header("Level Data")]
-        public int levelGridFactor = 4;
+        [Range(2,8)] public int levelGridFactor = 4;
         public string levelName;
         public int levelRate = 3;
         #endregion
-
-        private bool VerifiesIfUnlocked()
-        {
-            //Search Json saves
-            return false;
-        }
     }
 }
