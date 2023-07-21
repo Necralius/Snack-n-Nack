@@ -16,7 +16,7 @@ namespace NekraliusDevelopmentStudio
     public class GridGenerator : MonoBehaviour
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //GridGenerator - (0.1)
+        //GridGenerator - (0.5)
         //State: Functional - (Needs Refactoring, Needs Coments)
         //This code represents (Code functionality ou code meaning)
 
@@ -128,7 +128,7 @@ namespace NekraliusDevelopmentStudio
 
                 gameGridContent.Add(instatiatedObj);
 
-                AudioInGameManager.Instance.audioDatabase.GetAndPlayEffectClip("Cell Generated");               
+                AudioManager.Instance.audioDatabase.GetAndPlayEffectClip("Cell Generated");               
             }
         }
         public IEnumerator GenerateMissingBlocks()
@@ -206,7 +206,7 @@ namespace NekraliusDevelopmentStudio
                     instatiatedObj = null;
                     index++;
 
-                    AudioInGameManager.Instance.audioDatabase.GetAndPlayEffectClip("Cell Generated");
+                    AudioManager.Instance.audioDatabase.GetAndPlayEffectClip("Cell Generated");
 
                     yield return new WaitForSeconds(timeBetwenCellSpawn);
                 }

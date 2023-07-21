@@ -70,7 +70,7 @@ public class InputController : MonoBehaviour
             {
                 secondGuessTaked = true;
                 secondGuess = new Guess(gridCellitem.guessID, gridCellitem);
-                if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode)) secondGuess.gridCell.ShowObject();
+                if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode)) secondGuess.gridCell.ShowObject();               
 
                 gridCellitem.outlineEffector.enabled = true;
                 gridCellitem.isSelected = true;
@@ -89,7 +89,7 @@ public class InputController : MonoBehaviour
             else GameManager.Instance.CalculateScore(30);
             GameManager.Instance.CalculateScore(30);
 
-
+            GameManager.Instance.AddCombo();
 
             Destroy(firstGuess.gridCell.gameObject, 1f);
             Destroy(secondGuess.gridCell.gameObject, 1f);
@@ -99,13 +99,16 @@ public class InputController : MonoBehaviour
         }
         else
         {
+            if (firstGuess != null && secondGuess != null) yield return null;
+
+            GameManager.Instance.ResetCombo();
+            GameManager.Instance.wrongGuesses++;
+
             yield return new WaitForSeconds(1f);
             firstGuess.gridCell.outlineEffector.enabled = false;
             secondGuess.gridCell.outlineEffector.enabled = false;
 
-            if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode)) firstGuess.gridCell.HideObject();
-            if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode)) secondGuess.gridCell.HideObject();
-            GameManager.Instance.wrongGuesses++;
+            if (PlayerManager.Instance.gameType.Equals(GameType.CasualMode)) firstGuess.gridCell.HideObject(); secondGuess.gridCell.HideObject();
         }
 
         firstGuessTaked = false;

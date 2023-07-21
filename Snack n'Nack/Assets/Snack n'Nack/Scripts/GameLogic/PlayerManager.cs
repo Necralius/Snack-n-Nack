@@ -9,7 +9,7 @@ namespace NekraliusDevelopmentStudio
     public class PlayerManager : MonoBehaviour
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //CompleteCodeName - (Code Version)
+        //PlayerManager - (0.1)
         //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
         //This code represents (Code functionality or code meaning)
 

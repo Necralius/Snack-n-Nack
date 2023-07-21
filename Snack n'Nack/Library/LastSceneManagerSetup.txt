@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Snack n'Nack/Scenes/InfinityMode.unity
+- path: Assets/Snack n'Nack/Scenes/MainMenu.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

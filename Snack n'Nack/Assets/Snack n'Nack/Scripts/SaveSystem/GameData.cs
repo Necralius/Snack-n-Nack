@@ -9,20 +9,19 @@ namespace NekraliusDevelopmentStudio
     public class GameData
     {
         //Code made by Victor Paulo Melo da Silva - Game Developer - GitHub - https://github.com/Necralius
-        //CompleteCodeName - (Code Version)
+        //GameData - (0.1)
         //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
         //This code represents (Code functionality or code meaning)
 
         public bool audioActive;
 
-        public GameData(bool audioActive)
+        public GameData(AudioManager audioManager)
         {
-            this.audioActive = audioActive;
+            audioActive = audioManager.audioActive;
         }
-        public void RoundEnd()
+        public void SaveGame(AudioManager audioManager)
         {
-
-
+            audioActive = audioManager.audioActive;
         }
     }
 }

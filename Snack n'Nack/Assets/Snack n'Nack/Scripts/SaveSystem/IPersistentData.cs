@@ -11,7 +11,6 @@ namespace NekraliusDevelopmentStudio
         //Code State - (Needs Refactoring, Needs Coments, Needs Improvement)
         //This code represents (Code functionality or code meaning)
 
-        void LoadData();
-        void SaveData();
+        void LoadData(GameData data);
     }
 }

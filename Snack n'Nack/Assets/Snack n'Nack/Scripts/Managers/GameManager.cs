@@ -21,14 +21,23 @@ namespace NekraliusDevelopmentStudio
         private void Awake() => Instance = this;
         #endregion
 
+        #region - Dependencies -
+        private GridGenerator gridGenerator => GridGenerator.Instance;
+        #endregion
+
+        #region - Pause System -
+        [Header("Game Pause")]
         public GameObject pauseMenu;
         public bool isPaused;
-        private GridGenerator gridGenerator => GridGenerator.Instance;
+        #endregion
 
         #region - Combo System -
+        [Header("Combo System")]
         public int comboQuantity = 0;
+        public float comboMultiplier = 1.0f;
         public TextMeshProUGUI comboText;
         private Animator comboAnimator => comboText.GetComponent<Animator>();
+
         [SerializeField] private float comboTime = 3;
         private float currentComboTimer = 0;
         #endregion
@@ -66,32 +75,33 @@ namespace NekraliusDevelopmentStudio
         #endregion
 
         #region - Infinity Mode -
+        [SerializeField] private TextMeshProUGUI wrongGuessesText;
         public int wrongGuesses = 0;
         public int maxWrongGuesses = 3;
-
         #endregion
 
         //----------- Methods -----------//
 
-        #region - Build In Methods -
-        
+        #region - Build In Methods -  
+        private void Start() => savedGame = false;
+        private void OnEnable() { finishScreen.SetActive(false); objectsToHide.SetActive(true); }
         private void Update()
         {
             CounterManegment();
             ComboCounter();
             if (gameFinished) FinishGame();
+            comboText.gameObject.SetActive(comboQuantity >= 2);
 
-            currentScoreValue = Mathf.RoundToInt(Mathf.Lerp(currentScoreValue, targetScore, 10 * Time.deltaTime));
-            scoreText.text = currentScoreValue.ToString();
+            currentScoreValue = Mathf.FloorToInt(Mathf.Lerp(currentScoreValue, targetScore, 10 * Time.deltaTime));
+            scoreText.text = $"Score: {currentScoreValue}";
+            wrongGuessesText.text = $"Wrong Guesses: {wrongGuesses} from {maxWrongGuesses}";
         }
-        private void OnEnable() { finishScreen.SetActive(false); objectsToHide.SetActive(true); }
-        private void Start() => savedGame = false;
         #endregion
 
         #region - Score Calculation -
         public void CalculateScore(int value)
         {
-            targetScore += value;
+            targetScore += (int)(value * comboMultiplier);
             gridGenerator.RandomObjectPossibilityAddBehavior();
         }
         #endregion
@@ -166,7 +176,7 @@ namespace NekraliusDevelopmentStudio
             Debug.Log("Game Finished!");
             
             finalTime.text = string.Format("{0:00.00}", gameTime);
-            finalScore.text = string.Format("{0}", currentScoreValue);
+            finalScore.text = $"{currentScoreValue}";
 
             if (!savedGame)
             {
@@ -175,6 +185,7 @@ namespace NekraliusDevelopmentStudio
                     PlayerManager.Instance.UnlockNextLevel();
                     PlayerManager.Instance.currentLevel.levelPlayed = true;
                 }
+
                 PlayerManager.Instance.playerData.AddScore(currentScoreValue);
                 PlayerManager.Instance.playerData.SaveScore();
                 savedGame = true;
@@ -207,6 +218,10 @@ namespace NekraliusDevelopmentStudio
         public void AddCombo()
         {
             comboQuantity++;
+            
+            if (comboQuantity < 2) return;
+            
+            comboMultiplier += 0.1f;
             currentComboTimer = comboTime;
             comboAnimator.SetTrigger("AddCombo");
             comboText.text = $"Combo {comboQuantity}X";
@@ -215,12 +230,15 @@ namespace NekraliusDevelopmentStudio
         {
             comboQuantity = 0;
             comboText.text = $"Combo {comboQuantity}X";
-            gameObject.SetActive(false);
+            comboText.gameObject.SetActive(false);
         }
         private void ComboCounter()
         {
-            if (currentComboTimer <= 0) ResetCombo();
-            else currentComboTimer -= Time.deltaTime;
+            if (comboQuantity >= 2)
+            {
+                if (currentComboTimer <= 0) ResetCombo();
+                else currentComboTimer -= Time.deltaTime;
+            }
         }
         #endregion
 

@@ -18,8 +18,8 @@ namespace NekraliusDevelopmentStudio
 
         public AudioClip GetClip(string ClipName) => AudioFileContents.First(clip => clip.FileName == ClipName).ClipContent;
 
-        public void GetAndPlayEffectClip(string ClipName) => AudioInGameManager.Instance.PlayAudioClipWithVariation(GetClip(ClipName));
-        public void GetAndPlayMusicClip(string ClipName) => AudioInGameManager.Instance.PlayMusic(GetClip(ClipName));
+        public void GetAndPlayEffectClip(string ClipName) => AudioManager.Instance.PlayAudioClipWithVariation(GetClip(ClipName));
+        public void GetAndPlayMusicClip(string ClipName) => AudioManager.Instance.PlayMusic(GetClip(ClipName));
 
     }
 
