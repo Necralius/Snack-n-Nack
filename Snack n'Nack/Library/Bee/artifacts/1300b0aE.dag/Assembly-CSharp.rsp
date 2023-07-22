@@ -394,7 +394,6 @@
 "Assets/Snack n'Nack/Scripts/SaveSystem/GameData.cs"
 "Assets/Snack n'Nack/Scripts/SaveSystem/IPersistentData.cs"
 "Assets/Snack n'Nack/Scripts/SaveSystem/SaveManager.cs"
-"Assets/Snack n'Nack/Scripts/SceneTransitionSystem/SceneLoader.cs"
 "Assets/Snack n'Nack/Scripts/SceneTransitionSystem/TransitionAsset.cs"
 "Assets/Snack n'Nack/Scripts/Special Card/SpecialCardView.cs"
 "Assets/Snack n'Nack/Scripts/UI_Systems/ConfirmationDialogue.cs"

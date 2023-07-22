@@ -97,7 +97,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 121}
   m_MaxSize: {x: 4000, y: 4021}
   vertical: 0
-  controlID: 16469
+  controlID: 17
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 111
+  controlID: 143
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -263,8 +263,8 @@ MonoBehaviour:
     y: 0
     width: 289
     height: 376
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -690,14 +690,14 @@ MonoBehaviour:
       e31: 0
       e32: 0
       e33: 1
-    - e00: 0.7401057
+    - e00: 0.7634834
       e01: 0
       e02: 0
-      e03: -99.9019
+      e03: -127.48114
       e10: 0
-      e11: 0.7401057
+      e11: 0.7634834
       e12: 0
-      e13: 82.35794
+      e13: 58.36947
       e20: 0
       e21: 0
       e22: 1
@@ -723,10 +723,10 @@ MonoBehaviour:
       e32: 0
       e33: 1
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: 319ea212c56d9594399de041927e6841,
+  m_AnimatorController: {fileID: 9100000, guid: bd1f1152ba7bcfb4b802e8c5865f1251,
     type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: -4030003388170412146, guid: 319ea212c56d9594399de041927e6841,
+  - m_Target: {fileID: 2099829134166508805, guid: bd1f1152ba7bcfb4b802e8c5865f1251,
       type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
@@ -778,23 +778,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: a048f2ff484af2ff1851f2ff3856f2ffa0b0f3ff8064f5ff789ff5ff8a77faff1c42fbff0e3cfcff10f3ffff647a0000727a0000148900000e9e00001c9e0000269e000078a60000
+      m_SelectedIDs: 24bc0000
+      m_LastClickedID: 48164
+      m_ExpandedIDs: cc15faff9009fbff12bffbffa2ccfbffbed3fbff18e1fbffcc22fcffb62efcff4831fcff2033fcffd635fcff203afcff4c8bfdff328ffdff5094fdfff4fafffff4ffffffd49b000018a70000cea70000f6aa000086ab0000aab90000b4bc000026c400003cd80000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: AudioManager
+        m_OriginalName: AudioManager
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: 39892
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 4
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 11}
       m_SearchString: 
@@ -1260,7 +1260,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Snack n'Nack/Prefabs/ScriptableObjects/Audio
+    - Assets/Snack n'Nack/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1268,16 +1268,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Snack n'Nack/Prefabs/ScriptableObjects/Audio
+  - Assets/Snack n'Nack/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: E:\Unity Projetos\GitProjects\Snack-n-Nack\Snack n'Nack
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 290}
-    m_SelectedIDs: 3ac70000
-    m_LastClickedID: 51002
-    m_ExpandedIDs: 000000005275000054750000567500005a7500005c750000ac79000058c3000000ca9a3b
+    scrollPos: {x: 0, y: 315}
+    m_SelectedIDs: 46720000
+    m_LastClickedID: 29254
+    m_ExpandedIDs: 000000000e72000010720000127200001472000016720000187200001a7200003272000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1305,7 +1305,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000527500005475000056750000587500005a7500005c750000
+    m_ExpandedIDs: 000000000e72000010720000127200001472000016720000187200001a720000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

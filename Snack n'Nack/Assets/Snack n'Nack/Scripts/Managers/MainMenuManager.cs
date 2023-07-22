@@ -13,12 +13,12 @@ namespace NekraliusDevelopmentStudio
 
         LevelView currentView;
 
-        public void InfinityMode() => ConfirmationDialogue.Instance.SetUpAction("Confirm Retry", "Really want to repeat the level?", StartInfinityMode);
+        public void InfinityMode() => ConfirmationDialogue.Instance.SetUpAction("Confirm New Game", "Really want to start the infinity mode?", StartInfinityMode);
         public void StartCasualMode(LevelView view)
         {
             currentView = view;
 
-            ConfirmationDialogue.Instance.SetUpAction("Confirm Level", "Really want to start level: " + view.levelName + "?", StartCasualMode);
+            ConfirmationDialogue.Instance.SetUpAction("Confirm Level", "Really want to start the level: " + view.currentLevel.levelName + "?", StartCasualMode);
         }
 
         private string StartInfinityMode(bool confirmed)

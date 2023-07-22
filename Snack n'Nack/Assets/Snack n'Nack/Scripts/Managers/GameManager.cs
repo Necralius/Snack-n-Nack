@@ -94,7 +94,7 @@ namespace NekraliusDevelopmentStudio
 
             currentScoreValue = Mathf.FloorToInt(Mathf.Lerp(currentScoreValue, targetScore, 10 * Time.deltaTime));
             scoreText.text = $"Score: {currentScoreValue}";
-            wrongGuessesText.text = $"Wrong Guesses: {wrongGuesses} from {maxWrongGuesses}";
+            if (PlayerManager.Instance.gameType.Equals(GameType.InfinityMode)) wrongGuessesText.text = $"Wrong Guesses: {wrongGuesses} from {maxWrongGuesses}";
         }
         #endregion
 

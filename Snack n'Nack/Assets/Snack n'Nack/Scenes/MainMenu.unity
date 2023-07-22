@@ -1726,7 +1726,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff677747c14c3a24caad852541a5f2ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainSource: {fileID: 705701242}
   audioDatabase: {fileID: 11400000, guid: ac741f9fe3e574c4ca0683cb9846a706, type: 2}
   audioActive: 1
 --- !u!1 &731281838
@@ -2893,8 +2892,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1425343870}
   - component: {fileID: 1425343869}
-  - component: {fileID: 1425343873}
-  - component: {fileID: 1425343872}
   - component: {fileID: 1425343871}
   m_Layer: 0
   m_Name: MenuManager
@@ -2945,32 +2942,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 301b1ea97964b20488e3db48a299b2f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1425343872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425343866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e1b6340c1521154dbf657202716aad1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canLoad: 1
-  nextSceneIndex: 1
---- !u!114 &1425343873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425343866}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e146c6a484a7c2344ad730830b6f69e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1513459132

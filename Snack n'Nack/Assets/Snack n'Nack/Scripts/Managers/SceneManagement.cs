@@ -21,21 +21,20 @@ namespace NekraliusDevelopmentStudio
         }
 
         #region - Scene Managment -
-        public void LoadSceneAsync(int SceneIndex) => SceneManager.LoadSceneAsync(SceneIndex);//This method loads an scene using an scene index as argument
-        public void LoadSceneAsync(string SceneName) => SceneManager.LoadSceneAsync(SceneName);//This method loads an scene using the scene name as argument
+        public void LoadSceneAsync(int SceneIndex) => TransitionAsset.Instance.LoadScene(SceneIndex);//This method loads an scene using an scene index as argument
+        public void LoadSceneAsync(string SceneName) => TransitionAsset.Instance.LoadScene(SceneName);//This method loads an scene using the scene name as argument
         public void LoadInGameSceneAsync(int SceneIndex)
         {
-            SceneManager.LoadSceneAsync(SceneIndex);//This method loads an scene using an scene index as argument
+            TransitionAsset.Instance.LoadScene(SceneIndex);//This method loads an scene using an scene index as argument
             PlayerManager.Instance.gameType = SceneIndex == 1 ? GameType.CasualMode : GameType.InfinityMode;
             PlayerManager.Instance.gameState = GameSate.InGame;
         }
         public void LoadMenuSceneAsync()
         {
-            AsyncOperation operation = SceneManager.LoadSceneAsync(0);//This method loads an scene using an scene index as argument
-            if (operation.isDone) return;
+            TransitionAsset.Instance.LoadScene(0);//This method loads an scene using an scene index as argument
             PlayerManager.Instance.gameState = GameSate.InMenu;
         }
-        public void ReloadCurrentScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);//This method reload the current scene
+        public void ReloadCurrentScene() => TransitionAsset.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);//This method reload the current scene
         public void ReloadGameScene() => LoadInGameSceneAsync(SceneManager.GetActiveScene().buildIndex);
         #endregion
     }

@@ -22,7 +22,7 @@ namespace NekraliusDevelopmentStudio
         #endregion
 
         #region - Audio Sources -
-        public AudioSource mainSource;
+        public AudioSource mainSource => GetComponent<AudioSource>();
         #endregion
 
         #region - Audio Data -
